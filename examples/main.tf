@@ -1,39 +1,14 @@
-# VGS Terraform Provider [WIP]
-
-## Build
-## For your system
-```shell
-~ make default
-~ ls ./bin
-terraform-provider-vgs_7324ce7
-```
-
-## All targets
-```shell
-~ make all
-```
-
-## Use
-1. Put the binary under Terraform plugin directory, usually like
-```shell
-~ mv ./bin/terraform-provider-vgs_7324ce7_darwin_amd64 ~/.terraform.d/plugins/terraform-provider-vgs
-```
-
-2. Create a Vault through VGS dashboard and get your Vault ID.
-
-3. Create a directory for your TF files (or use `/examples`) and create `main.tf`
-```terraform
 provider "vgs" {}
 
 resource "vgs_route" "my_route" {
-  environment = "sandbox"  // or "live", "live-eu-1"
-  vault = "VAULT ID HERE"
+  environment = "sandbox"
+  vault = "tntbcduzut5"
   inline_config = <<EOF
 id: 04b2e1b7-fb60-472f-a79f-af7e2353f122
 type: rule_chain
 attributes:
   created_at: '2021-11-26T18:10:08'
-  destination_override_endpoint: 'https://echo.apps.verygood.systems'
+  destination_override_endpoint: 'https://echon.apps.verygood.systems'
   entries:
     - classifiers: {}
       config:
@@ -77,11 +52,3 @@ attributes:
   updated_at: '2021-11-26T18:10:08'
 EOF
 }
-```
-
-4. Install and use [vgs-cli](https://github.com/verygoodsecurity/vgs-cli) to create a [ServiceAccount](https://www.verygoodsecurity.com/docs/vgs-cli/service-account#create).
-5. Set the `VGS_CLIENT_ID` and `VGS_CLIENT_SECRET` environment variables from ServiceAccount and run
-```shell
-~ terraform init
-~ VGS_CLIENT_ID=xxx VGS_CLIENT_SECRET=yyy terraform apply
-```

@@ -6,7 +6,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/pkg/errors"
 	vgs "github.com/verygoodsecurity/vgs-api-client-go/clients"
+	vgstools "github.com/verygoodsecurity/vgs-api-client-go/tools"
 	"regexp"
 	"strings"
 )
@@ -32,11 +34,6 @@ func resourceRoute() *schema.Resource {
 		DeleteContext: deleteRoute,
 
 		Schema: map[string]*schema.Schema{
-			"last_updated": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
 			"environment": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -63,27 +60,73 @@ func resourceRoute() *schema.Resource {
 
 func readRoute(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	vaultId := d.Get("vault").(string)
-	dataEnv := strings.ToLower(d.Get("environment").(string))
 
-	config := vgs.DynamicConfig().
-		AddParameter("VGS_ACCOUNT_MANAGEMENT_API_BASE_URL", "https://accounts.verygoodsecurity.com").
-		AddParameter("VGS_VAULT_MANAGEMENT_API_BASE_URL", fmt.Sprintf("https://api.%s.verygoodsecurity.com", dataEnv))
-
+	cfg := config(d)
 	c := m.(vgs.VgsClientsFacade)
-	if _, err := c.Vaults(config).RetrieveVault(vaultId); err != nil {
+	if _, err := c.Vaults(cfg).RetrieveVault(vaultId); err != nil {
 		return diag.FromErr(err)
 	}
+	routeId, err := vgstools.RouteIdFromYaml(d.Get("inline_config").(string))
+	if err != nil {
+		return diag.FromErr(errors.Wrap(err, "failed to extract route ID"))
+	}
+	_, err = c.Routes(cfg).GetRoute(vaultId, routeId)
 
-	// c.Route(config).RetrieveRoute(...)
+	// TODO set yaml?
 
-	return nil
+	return diag.FromErr(err)
 }
 func createRoute(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	vaultId := d.Get("vault").(string)
+
+	cfg := config(d)
+	c := m.(vgs.VgsClientsFacade)
+	if _, err := c.Vaults(cfg).RetrieveVault(vaultId); err != nil {
+		return diag.FromErr(err)
+	}
+	routeYaml := d.Get("inline_config").(string)
+	routeId, err := c.Routes(cfg).ImportRoute(vaultId, strings.NewReader(routeYaml))
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	d.SetId(routeId)
 	return nil
 }
+
 func updateRoute(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return nil
+	if d.HasChange("vault") {
+		return diag.Errorf("Vault ID update is not allowed")
+	}
+	if d.HasChange("environment") {
+		return diag.Errorf("Environment update is not allowed")
+	}
+	return createRoute(ctx, d, m)
 }
+
 func deleteRoute(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return nil
+	vaultId := d.Get("vault").(string)
+
+	cfg := config(d)
+	c := m.(vgs.VgsClientsFacade)
+	if _, err := c.Vaults(cfg).RetrieveVault(vaultId); err != nil {
+		return diag.FromErr(err)
+	}
+	id, err := vgstools.RouteIdFromYaml(d.Get("inline_config").(string))
+	if err != nil {
+		return diag.FromErr(errors.Wrap(err, "failed to extract route ID"))
+	}
+
+	return diag.FromErr(c.Routes(cfg).DeleteRoute(vaultId, id))
+}
+
+func config(d *schema.ResourceData) *vgs.DynamicClientConfig {
+	dataEnv := strings.ToLower(d.Get("environment").(string))
+	vaultMgmt := fmt.Sprintf("https://api.%s.verygoodsecurity.com", dataEnv)
+	// TODO use env vars and build with ldflags
+	return vgs.DynamicConfig().
+		WithFallback(vgs.EnvironmentConfig()).
+		AddParameter("VGS_KEYCLOAK_URL", "https://auth.verygoodsecurity.com").
+		AddParameter("VGS_KEYCLOAK_REALM", "vgs").
+		AddParameter("VGS_ACCOUNT_MANAGEMENT_API_BASE_URL", "https://accounts.verygoodsecurity.com").
+		AddParameter("VGS_VAULT_MANAGEMENT_API_BASE_URL", vaultMgmt)
 }
