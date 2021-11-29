@@ -5,7 +5,7 @@
 ```shell
 ~ make default
 ~ ls ./bin
-terraform-provider-vgs_7324ce7
+terraform-provider-vgs_0.1.0
 ```
 
 ## All targets
@@ -16,7 +16,7 @@ terraform-provider-vgs_7324ce7
 ## Use
 1. Put the binary under Terraform plugin directory, usually like
 ```shell
-~ mv ./bin/terraform-provider-vgs_7324ce7_darwin_amd64 ~/.terraform.d/plugins/terraform-provider-vgs
+~ mv ./bin/terraform-provider-vgs_0.1.0 ~/.terraform.d/plugins/terraform-provider-vgs_0.1.0
 ```
 
 2. Create a Vault through VGS dashboard and get your Vault ID.
