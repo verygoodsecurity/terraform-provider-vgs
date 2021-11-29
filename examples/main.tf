@@ -8,7 +8,7 @@ id: 04b2e1b7-fb60-472f-a79f-af7e2353f122
 type: rule_chain
 attributes:
   created_at: '2021-11-26T18:10:08'
-  destination_override_endpoint: 'https://echon.apps.verygood.systems'
+  destination_override_endpoint: 'https://echo.apps.verygood.systems'
   entries:
     - classifiers: {}
       config:
