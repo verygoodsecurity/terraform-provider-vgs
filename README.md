@@ -85,3 +85,17 @@ EOF
 ~ terraform init
 ~ VGS_CLIENT_ID=xxx VGS_CLIENT_SECRET=yyy terraform apply
 ```
+
+## Develop
+
+Useful overrides for development
+```shell
+~ VGS_VAULT_MANAGEMENT_API_BASE_URL=https://api.verygoodsecurity.io \
+VGS_ACCOUNT_MANAGEMENT_API_BASE_URL=https://accounts.verygoodsecurity.io \
+VGS_KEYCLOAK_URL=https://auth.verygoodsecurity.io \
+VGS_CLIENT_ID=XXX \
+VGS_CLIENT_SECRET=YYY \
+terraform apply
+```
+
+API client located under https://github.com/verygoodsecurity/vgs-api-client-go

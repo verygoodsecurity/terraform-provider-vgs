@@ -119,14 +119,12 @@ func deleteRoute(ctx context.Context, d *schema.ResourceData, m interface{}) dia
 	return diag.FromErr(c.Routes(cfg).DeleteRoute(vaultId, id))
 }
 
-func config(d *schema.ResourceData) *vgs.DynamicClientConfig {
+func config(d *schema.ResourceData) vgs.ClientConfig {
 	dataEnv := strings.ToLower(d.Get("environment").(string))
-	vaultMgmt := fmt.Sprintf("https://api.%s.verygoodsecurity.com", dataEnv)
-	// TODO use env vars and build with ldflags
-	return vgs.DynamicConfig().
-		WithFallback(vgs.EnvironmentConfig()).
-		AddParameter("VGS_KEYCLOAK_URL", "https://auth.verygoodsecurity.com").
-		AddParameter("VGS_KEYCLOAK_REALM", "vgs").
-		AddParameter("VGS_ACCOUNT_MANAGEMENT_API_BASE_URL", "https://accounts.verygoodsecurity.com").
-		AddParameter("VGS_VAULT_MANAGEMENT_API_BASE_URL", vaultMgmt)
+	return vgs.EnvironmentConfig().
+		WithFallback(vgs.DynamicConfig().
+			AddParameter("VGS_KEYCLOAK_URL", "https://auth.verygoodsecurity.com").
+			AddParameter("VGS_KEYCLOAK_REALM", "vgs").
+			AddParameter("VGS_ACCOUNT_MANAGEMENT_API_BASE_URL", "https://accounts.verygoodsecurity.com").
+			AddParameter("VGS_VAULT_MANAGEMENT_API_BASE_URL", fmt.Sprintf("https://api.%s.verygoodsecurity.com", dataEnv)))
 }
