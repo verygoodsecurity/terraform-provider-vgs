@@ -1,4 +1,6 @@
-provider "vgs" {}
+provider "vgs" {
+  version = "~> 0.1"
+}
 
 resource "vgs_route" "inbound_route" {
   environment = "sandbox"
