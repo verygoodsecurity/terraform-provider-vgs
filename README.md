@@ -4,14 +4,14 @@
 Navigate to the releases page and get the latest binary for your OS.
 
 ## Build
-## For your system
+### For your system
 ```shell
 ~ make default
 ~ ls ./bin
 terraform-provider-vgs_v0.1.0
 ```
 
-## All targets
+### All targets
 ```shell
 ~ make all
 ~ make checksums  # for release
