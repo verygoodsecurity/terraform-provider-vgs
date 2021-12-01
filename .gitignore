@@ -31,6 +31,7 @@ internal/preferences_proto
 venv
 
 bin
+release
 
 .terraform
 examples/.terraform

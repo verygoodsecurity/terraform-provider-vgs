@@ -1,4 +1,7 @@
-# VGS Terraform Provider [WIP]
+# VGS Terraform Provider
+
+## Install pre-built
+Navigate to the releases page and get the latest binary for your OS.
 
 ## Build
 ## For your system
@@ -11,6 +14,7 @@ terraform-provider-vgs_v0.1.0
 ## All targets
 ```shell
 ~ make all
+~ make checksums  # for release
 ```
 
 ## Use
