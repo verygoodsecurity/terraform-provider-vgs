@@ -1,5 +1,13 @@
 # VGS Terraform Provider
 
+# THIS LIBRARY IS PRE-RELEASE AND NOT READY FOR CUSTOMER CONSUMPTION
+
+It will be ready when we provide 
+
+- [ ] Tests
+- [ ] CICD
+- [ ] Documentation
+
 ## Install pre-built
 Navigate to the releases page and get the latest binary for your OS.
 
