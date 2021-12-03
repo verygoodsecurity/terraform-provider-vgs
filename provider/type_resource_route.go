@@ -125,6 +125,6 @@ func config(d *schema.ResourceData) vgs.ClientConfig {
 		WithFallback(vgs.DynamicConfig().
 			AddParameter("VGS_KEYCLOAK_URL", "https://auth.verygoodsecurity.com").
 			AddParameter("VGS_KEYCLOAK_REALM", "vgs").
-			AddParameter("VGS_ACCOUNT_MANAGEMENT_API_BASE_URL", "https://accounts.verygoodsecurity.com").
+			AddParameter("VGS_ACCOUNT_MANAGEMENT_API_BASE_URL", "https://accounts.apps.verygoodsecurity.com").
 			AddParameter("VGS_VAULT_MANAGEMENT_API_BASE_URL", fmt.Sprintf("https://api.%s.verygoodsecurity.com", dataEnv)))
 }
