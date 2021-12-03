@@ -398,8 +398,8 @@ github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69
 github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5/go.mod h1:ncp9v5uamzpCO7NfCPTXjqaC+bZgJeR0sMTm6dMHP7U=
 github.com/ulikunitz/xz v0.5.8 h1:ERv8V6GKqVi23rgu5cj9pVfVzJbOqAY2Ntl88O6c2nQ=
 github.com/ulikunitz/xz v0.5.8/go.mod h1:nbz6k7qbPmH4IRqmfOplQw/tblSgqTqBwxkY0oWt/14=
-github.com/verygoodsecurity/vgs-api-client-go v0.2.5-beta2 h1:BjTR3zy0c+GfWLq533IQ8a8Vr5QnHb9bZLGpqePmgrQ=
-github.com/verygoodsecurity/vgs-api-client-go v0.2.5-beta2/go.mod h1:WB8H9LVa3pvMsJJvF91YBwVr4I9FZ83L43gYstoaboA=
+github.com/verygoodsecurity/vgs-api-client-go v0.2.5 h1:1p8vyIZSTuP0NC2MnaHv5Cx9qiHNfwj7kUMFQQVUYmM=
+github.com/verygoodsecurity/vgs-api-client-go v0.2.5/go.mod h1:WB8H9LVa3pvMsJJvF91YBwVr4I9FZ83L43gYstoaboA=
 github.com/vmihailenco/msgpack v3.3.3+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6AcGMlsjHatGryHQYUTf1ShIgkk=
 github.com/vmihailenco/msgpack v4.0.4+incompatible h1:dSLoQfGFAo3F6OoNhwUmLwVgaUXK79GlxNBwueZn0xI=
 github.com/vmihailenco/msgpack v4.0.4+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6AcGMlsjHatGryHQYUTf1ShIgkk=
