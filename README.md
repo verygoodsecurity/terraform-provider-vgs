@@ -99,7 +99,8 @@ EOF
 ```
 
 4. Install and use [vgs-cli](https://github.com/verygoodsecurity/vgs-cli) to create a [ServiceAccount](https://www.verygoodsecurity.com/docs/vgs-cli/service-account#create).
-5. Set the `VGS_CLIENT_ID` and `VGS_CLIENT_SECRET` environment variables from ServiceAccount and run
+5. Set the `VGS_CLIENT_ID` and `VGS_CLIENT_SECRET` environment variables from ServiceAccount and run  
+*NOTE: Make sure you are using `terraform` version 0.13.* or later.*
 ```shell
 ~ terraform init
 ~ VGS_CLIENT_ID=xxx VGS_CLIENT_SECRET=yyy terraform apply
