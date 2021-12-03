@@ -3,8 +3,9 @@ PRERELEASE := $(shell git describe --tags $(git rev-list --branches=main --tags 
 default:
 	go build -o ./bin/terraform-provider-vgs_$(RELEASE)
 
-install-local:
-	go build -o ~/.terraform.d/plugins/terraform-provider-vgs_$(PRERELEASE)
+install-local:	
+	mkdir -p ~/.terraform.d/plugins/local.terraform.com/user/vgs/$(subst v,,$(PRERELEASE))/darwin_amd64
+	go build -o ~/.terraform.d/plugins/local.terraform.com/user/vgs/$(subst v,,$(PRERELEASE))/darwin_amd64/terraform-provider-vgs_$(PRERELEASE)
 
 test:
 	echo "$(shell sha256sum release/terraform-provider-vgs_v0.1.1_linux_386.zip) 111"

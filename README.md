@@ -28,16 +28,24 @@ terraform-provider-vgs_v0.1.0
 ## Use
 1. Put the binary under Terraform plugin directory, usually like
 ```shell
-~ mv ./bin/terraform-provider-vgs_v0.1.0 ~/.terraform.d/plugins/terraform-provider-vgs_v0.1.0
+~ make install-local
 ```
 
 2. Create a Vault through VGS dashboard and get your Vault ID.
 
 3. Create a directory for your TF files (or use `/examples`) and create `main.tf`
 ```terraform
-provider "vgs" {
-  version = "~> 0.1"
+terraform {
+  required_providers {
+    vgs = {
+      source = "local.terraform.com/user/vgs"      
+      version = "0.1.0"
+    }
+  }
 }
+
+provider "vgs" { }
+
 resource "vgs_route" "inbound_route" {
   environment = "sandbox"
   vault = "tntbcduzut5"
