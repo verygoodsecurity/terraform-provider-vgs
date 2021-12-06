@@ -33,7 +33,7 @@ jobs:
       - run: goreleaser release --skip-sign 
 
 workflows:
-  pr: 
+  build: 
     jobs:
       - build-and-test
   release:
