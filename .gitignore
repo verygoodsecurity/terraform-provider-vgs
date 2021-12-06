@@ -36,3 +36,5 @@ release
 .terraform
 examples/.terraform
 *.tfstate*
+
+.vscode
