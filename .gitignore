@@ -27,6 +27,7 @@ gen
 
 # Generated files
 internal/preferences_proto
+dist
 
 venv
 
