@@ -1,5 +1,14 @@
+terraform {
+  required_providers {
+    vgs = {
+      source  = "local.terraform.com/user/vgs"
+      version = "0.1.2"
+    }
+  }
+}
+
 provider "vgs" {
-  version = "~> 0.1"
+
 }
 
 resource "vgs_route" "inbound_route" {
