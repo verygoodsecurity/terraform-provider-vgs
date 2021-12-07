@@ -1,11 +1,14 @@
 # VGS Terraform Provider
 
+[![CircleCI](https://circleci.com/gh/verygoodsecurity/terraform-provider-vgs.svg?style=svg&circle-token=8ae379e820e61ec6f8e8451ebaf5ed6958fa7c13)](https://circleci.com/gh/verygoodsecurity/terraform-provider-vgs)
+
+
 # THIS LIBRARY IS PRE-RELEASE AND NOT READY FOR CUSTOMER CONSUMPTION
 
 It will be ready when we provide 
 
 - [ ] Tests
-- [ ] CICD
+- [x] CICD
 - [ ] Documentation
 
 ## Install pre-built
