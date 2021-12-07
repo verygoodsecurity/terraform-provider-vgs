@@ -3,8 +3,8 @@ provider "vgs" {
 }
 
 resource "vgs_route" "inbound_route" {
-  environment = "sandbox"
-  vault = "tntbcduzut5"
+  environment   = "sandbox"
+  vault         = "tntbcduzut5"
   inline_config = <<EOF
 id: 04b2e1b7-fb60-472f-a79f-af7e2353f122
 type: rule_chain
@@ -54,8 +54,8 @@ EOF
 }
 
 resource "vgs_route" "outbound_route" {
-  environment = "sandbox"
-  vault = "tntbcduzut5"
+  environment   = "sandbox"
+  vault         = "tntbcduzut5"
   inline_config = <<EOF
 id: 37df6406-817f-4817-a72a-c675c50fb8ac
 type: rule_chain
