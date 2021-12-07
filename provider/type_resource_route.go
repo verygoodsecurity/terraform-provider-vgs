@@ -3,14 +3,15 @@ package provider
 import (
 	"context"
 	"fmt"
+	"regexp"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pkg/errors"
 	vgs "github.com/verygoodsecurity/vgs-api-client-go/clients"
 	vgstools "github.com/verygoodsecurity/vgs-api-client-go/tools"
-	"regexp"
-	"strings"
 )
 
 const (
@@ -82,12 +83,12 @@ func createRoute(ctx context.Context, d *schema.ResourceData, m interface{}) dia
 	cfg := config(d)
 	c := m.(vgs.VgsClientsFacade)
 	if _, err := c.Vaults(cfg).RetrieveVault(vaultId); err != nil {
-		return diag.FromErr(err)
+		return diag.FromErr(errors.Wrap(err, "Failed to retrieve vault"))
 	}
 	routeYaml := d.Get("inline_config").(string)
 	routeId, err := c.Routes(cfg).ImportRoute(vaultId, strings.NewReader(routeYaml))
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.FromErr(errors.Wrap(err, "Failed to import route"))
 	}
 	d.SetId(routeId)
 	return nil
