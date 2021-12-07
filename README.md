@@ -1,12 +1,12 @@
 # VGS Terraform Provider
- 
+
 [![CircleCI](https://circleci.com/gh/verygoodsecurity/terraform-provider-vgs.svg?style=svg&circle-token=8ae379e820e61ec6f8e8451ebaf5ed6958fa7c13)](https://circleci.com/gh/verygoodsecurity/terraform-provider-vgs)
 
 Custom Terraform provider that allows provisioning [VGS Proxy Routes](https://www.verygoodsecurity.com/docs/guides/managing-your-routes).
 
 # THIS LIBRARY IS PRE-RELEASE AND NOT READY FOR CUSTOMER CONSUMPTION
 
-It will be ready when we provide 
+It will be ready when we provide
 
 - [ ] Tests
 - [x] CICD
@@ -16,15 +16,16 @@ It will be ready when we provide
 
 ## Manual (in-house provider)
 1. Navigate to the latest release of the provider.
-2. Download archive for a particular OS and Architecture. You can run `terraform --version` on your enviroument to decide which OS and Archicture to use.
-3. Unzip the archive and copy the provider binary into `~/terraform.d/plugin/...` according to [official documentation](https://www.terraform.io/docs/cloud/run/install-software.html#in-house-providers). 
+2. Download archive for a particular OS and Architecture. You can run `terraform --version` on your environment to decide which OS and Arch to use.
+3. Unzip the archive and copy the provider binary into `~/terraform.d/plugin/...` according to [official documentation](https://www.terraform.io/docs/cloud/run/install-software.html#in-house-providers).
 
-## Terraform Registery
+## Terraform Registry
 NOTE: Current version has not been published to [Terraform Registry](https://registry.terraform.io/) yet.
 
 # How to Use
 1. Create a Vault through VGS dashboard and get your Vault ID.
-2. Create a directory for your TF files (or use `/examples`) and create `main.tf`
+2. Create a directory for your TF files (or use `/examples`) and create `main.tf`. For `terraform` of version `0.13` and later see `main_0.13.tf`.
+
 
 ```terraform
 provider "vgs" {
@@ -88,9 +89,11 @@ EOF
 ~ VGS_CLIENT_ID=xxx VGS_CLIENT_SECRET=yyy terraform apply
 ```
 
-# How to buld from source
+# How to build from source
+Requirements: Go
 
 ## For your system
+To compile binaries:
 ```shell
 ~ make build
 ~ ls ./bin
@@ -98,7 +101,7 @@ terraform-provider-vgs_v<ver>
 ```
 
 ## Develop
-Useful overrides for development
+Useful overrides for development:
 ```shell
 ~ VGS_VAULT_MANAGEMENT_API_BASE_URL=https://api.verygoodsecurity.io \
 VGS_ACCOUNT_MANAGEMENT_API_BASE_URL=https://accounts.verygoodsecurity.io \
@@ -111,6 +114,7 @@ terraform apply
 API client located under https://github.com/verygoodsecurity/vgs-api-client-go
 
 ## Test
+To run tests locally:
 ```shell
 ~ TF_ACC=true VGS_CLIENT_ID=xxx VGS_CLIENT_SECRET=yyy go test ./...
 ?   	github.com/verygoodsecurity/terraform-provider-vgs	[no test files]
