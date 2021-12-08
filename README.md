@@ -4,14 +4,6 @@
 
 Custom Terraform provider that allows provisioning [VGS Proxy Routes](https://www.verygoodsecurity.com/docs/guides/managing-your-routes).
 
-# THIS LIBRARY IS PRE-RELEASE AND NOT READY FOR CUSTOMER CONSUMPTION
-
-It will be ready when we provide
-
-- [x] Tests
-- [x] CICD
-- [x] Documentation
-
 # How to Install
 
 ## Manual (in-house provider)
