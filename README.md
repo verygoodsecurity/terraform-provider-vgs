@@ -9,17 +9,27 @@ Custom Terraform provider that allows provisioning [VGS Proxy Routes](https://ww
 ## Manual (in-house provider)
 1. Navigate to the latest release of the provider.
 2. Download archive for appropriate OS and Architecture. You can run `terraform --version` on your environment to see which variant from the list to use.
-3. Unzip the archive and copy the provider's binary into `~/terraform.d/plugin/...` according to [official documentation](https://www.terraform.io/docs/cloud/run/install-software.html#in-house-providers).
+3. Unzip the archive and copy the provider's binary into `~/terraform.d/plugin/...` according to [official documentation](https://www.terraform.io/docs/cloud/run/install-software.html#in-house-providers).  
 
+Example for `terraform` 0.13 and later:
+```shell
+~ mkdir -p ~/.terraform.d/plugins/local.terraform.com/user/vgs/{ver}/darwin_amd64
+~ cp ./bin/terraform-provider-vgs_{ver} ~/.terraform.d/plugins/local.terraform.com/user/vgs/{ver}/darwin_amd64/terraform-provider-vgs_{ver}
+```
+For `terraform` 0.12 and earlier:
+```shell
+~ cp ./bin/terraform-provider-vgs_{ver} ~/.terraform.d/plugins/terraform-provider-vgs_{ver}
+```
 ## Terraform Registry
 NOTE: The current version of the provider has not been published to [Terraform Registry](https://registry.terraform.io/) yet.
 
 # How to Use
 1. Create a Vault through VGS dashboard and get your Vault ID.
-2. Prepare terraform configuration for `vgs` provider. See [/examples](/examples/README.md) for more information on how to write the configuration.
+2. Prepare terraform configuration for `vgs` provider in separate folder (e.g. `/vgs`). See [/examples](/examples/README.md) for more information on how to write the configuration.
 3. Install and use [vgs-cli](https://github.com/verygoodsecurity/vgs-cli) to create a [ServiceAccount](https://www.verygoodsecurity.com/docs/vgs-cli/service-account#create).
 4. Set the `VGS_CLIENT_ID` and `VGS_CLIENT_SECRET` environment variables from ServiceAccount and run.
 ```shell
+~ cd /vgs
 ~ terraform init
 ~ VGS_CLIENT_ID=xxx VGS_CLIENT_SECRET=yyy terraform apply
 ```
