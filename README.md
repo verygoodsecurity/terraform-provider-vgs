@@ -9,7 +9,7 @@ Custom Terraform provider that allows provisioning [VGS Proxy Routes](https://ww
 ## Manual (in-house provider)
 1. Navigate to the latest release of the provider.
 2. Download archive for appropriate OS and Architecture. You can run `terraform --version` on your environment to see which variant from the list to use.
-3. Unzip the archive and copy the provider's binary into `~/terraform.d/plugin/...` according to [official documentation](https://www.terraform.io/docs/cloud/run/install-software.html#in-house-providers).  
+3. Unzip the archive and copy the provider's binary into `~/.terraform.d/plugin/...` according to [official documentation](https://www.terraform.io/docs/cloud/run/install-software.html#in-house-providers).  
 
 Example for `terraform` 0.13 and later:
 ```shell
