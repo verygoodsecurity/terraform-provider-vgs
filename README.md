@@ -18,6 +18,7 @@ Example for `terraform` 0.13 and later:
 ```
 For `terraform` 0.12 and earlier:
 ```shell
+~ mkdir -p ~/.terraform.d/plugins
 ~ cp ./bin/terraform-provider-vgs_{ver} ~/.terraform.d/plugins/terraform-provider-vgs_{ver}
 ```
 ## Terraform Registry
