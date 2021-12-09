@@ -5,9 +5,9 @@
 Custom Terraform provider that allows provisioning [VGS Proxy Routes](https://www.verygoodsecurity.com/docs/guides/managing-your-routes).
 
 # How to Install
-
+Requirements: `terraform` ver **0.12 or later**
 ## Manual (in-house provider)
-1. Navigate to the latest release of the provider.
+1. Navigate to the [latest release](https://github.com/verygoodsecurity/terraform-provider-vgs/releases) of the provider.
 2. Download archive for appropriate OS and Architecture. You can run `terraform --version` on your environment to see which variant from the list to use.
 3. Unzip the archive and copy the provider's binary into `~/.terraform.d/plugin/...` according to [official documentation](https://www.terraform.io/docs/cloud/run/install-software.html#in-house-providers).  
 
@@ -16,8 +16,9 @@ Example for `terraform` 0.13 and later:
 ~ mkdir -p ~/.terraform.d/plugins/local.terraform.com/user/vgs/{ver}/darwin_amd64
 ~ cp ./bin/terraform-provider-vgs_{ver} ~/.terraform.d/plugins/local.terraform.com/user/vgs/{ver}/darwin_amd64/terraform-provider-vgs_{ver}
 ```
-For `terraform` 0.12 and earlier:
+For `terraform` 0.12:
 ```shell
+~ mkdir -p ~/.terraform.d/plugins
 ~ cp ./bin/terraform-provider-vgs_{ver} ~/.terraform.d/plugins/terraform-provider-vgs_{ver}
 ```
 ## Terraform Registry
