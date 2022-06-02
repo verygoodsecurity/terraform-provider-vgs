@@ -1,3 +1,5 @@
+include common/make/common.mk
+
 RELEASE := $(shell git describe --tags $(git rev-list --branches=main --tags --max-count=1))
 PRERELEASE := $(shell git describe --tags $(git rev-list --branches=main --tags --max-count=1) | awk 'BEGIN{FS=OFS="."} {$$3+=1} 1')
 
@@ -14,3 +16,10 @@ install-local:
 testacc:
 	TF_ACC=true go test -v ./...
 
+lint: go-lint ## Lint all go files
+test: go-test ## Run all un-tagged go tests
+integration: go-test-integration ## Run all integrations tests, concourse helper
+install-tools: go-install-tools alderson-install-tools ## Install all required tools
+init-ci: init-github-actions ## Creates push_to_pr.yml and merged.yml workflows for github. This will overwrite current workflows by the same names
+update-ci: init-github-actions ## Creates push_to_pr.yml and merged.yml workflows for github. This will overwrite current workflows by the same names
+docker-build: docker-build-app # Build all docker images

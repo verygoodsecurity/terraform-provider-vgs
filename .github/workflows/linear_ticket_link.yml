@@ -1,0 +1,19 @@
+name: PR Title Linked to a Linear Ticket?
+
+on:
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  pr-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: morrisoncole/pr-lint-action@v1.5.1
+        with:
+          title-regex: ".{2,}-([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9])"
+          on-failed-regex-fail-action: true
+          on-failed-regex-request-changes: false
+          on-failed-regex-create-review: true
+          on-failed-regex-comment:
+            "Put the Linear Ticket in your PR Title & base commit! See [this](https://www.notion.so/perchcredit/Pull-Requests-Ticketing-and-Commits-8299ed63ff014ea78c9efcab4195a5bd#7e524705f07344718f8701c5c1f14f86) for more details."
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"

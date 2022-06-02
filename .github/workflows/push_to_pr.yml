@@ -1,0 +1,67 @@
+name: Push to PR
+
+on: 
+  pull_request:
+    branches: [ master, main ]
+
+jobs: 
+  build:
+    name: Lint and Unit tests
+    runs-on: ubuntu-latest
+    container:
+      image: public.ecr.aws/u2p8s8q2/altro_github_actions_base:v0.0.1
+      
+    steps:
+    - name: Change git URLs to use SSH
+      run: echo -e '[url "git@github.com:"]\n  insteadOf = "https://github.com"' >> ~/.gitconfig 
+
+    - name: Import Secrets
+      id: secrets
+      uses: hashicorp/vault-action@v2.4.0
+      with:
+        url: https://vault-cluster.vault.ce447047-e51d-4eb7-bd36-0b25f028a101.aws.hashicorp.cloud:8200
+        method: approle
+        roleId: ${{ secrets.VAULT_APP_ROLE_ID }}
+        secretId: ${{ secrets.VAULT_APP_ROLE_SECRET_ID }}
+        namespace: admin
+        exportEnv: false
+        secrets: |
+          secrets/platform/github-machine-user-ssh-key value | SSH_MACHINE_KEY ;
+  
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        ssh-key: ${{ steps.secrets.outputs.SSH_MACHINE_KEY }}
+        fetch-depth: 0
+
+    - name: Cache go paths
+      id: go-cache-paths
+      run: |
+        echo "::set-output name=go-build::$(go env GOCACHE)"
+        echo "::set-output name=go-mod::$(go env GOMODCACHE)"
+
+    - name: Go Build Cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.go-cache-paths.outputs.go-build }}
+        key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
+
+    - name: Go Mod Cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.go-cache-paths.outputs.go-mod }}
+        key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+
+    - uses: webfactory/ssh-agent@v0.5.4
+      with:
+        ssh-private-key: ${{ steps.secrets.outputs.SSH_MACHINE_KEY }}
+    
+    - name: Lint
+      run: | 
+        make lint
+
+    - name: Run unit tests
+      run: make test
+      env:
+        GOPRIVATE: "github.com/perchcredit/*"

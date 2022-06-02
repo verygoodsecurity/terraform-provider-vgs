@@ -1,0 +1,55 @@
+name: On Merge
+
+on:
+  push:
+    branches: [ master, main ]
+
+jobs:
+  buildImage:
+    name: Build and Publish Image to dev
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Change git URLs to use SSH
+      run: echo -e '[url "git@github.com:"]\n  insteadOf = "https://github.com/"' >> ~/.gitconfig
+
+    - name: Import Secrets
+      id: secrets
+      uses: hashicorp/vault-action@v2.4.0
+      with:
+        url: https://vault-cluster.vault.ce447047-e51d-4eb7-bd36-0b25f028a101.aws.hashicorp.cloud:8200
+        method: approle
+        roleId: ${{ secrets.VAULT_APP_ROLE_ID }}
+        secretId: ${{ secrets.VAULT_APP_ROLE_SECRET_ID }}
+        namespace: admin
+        exportEnv: false
+        secrets: |
+          secrets/platform/aws-access-key value | AWS_ACCESS_KEY_ID ;
+          secrets/platform/aws-secret-access-key value | AWS_SECRET_ACCESS_KEY ; 
+          secrets/platform/github-machine-user-ssh-key value | SSH_MACHINE_KEY ; 
+          secrets/platform/github-machine-access-token value | MACHINE_USER_ACCESS_TOKEN ;
+          secrets/platform/github-app-private-key value | GITHUB_APP_PRIVATE_KEY ;
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        ssh-key: ${{ steps.secrets.outputs.SSH_MACHINE_KEY }}
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+    - name: Run GoReleaser
+      uses: goreleaser/goreleaser-action@v3
+      with:
+        # either 'goreleaser' (default) or 'goreleaser-pro'
+        distribution: goreleaser
+        version: latest
+        args: release --rm-dist --skip-sign
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
+    - name: Upload assets
+      uses: actions/upload-artifact@v3
+      with:
+        name: terraform-provider-vgs
+        path: dist/*

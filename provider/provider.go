@@ -2,12 +2,15 @@ package provider
 
 import (
 	"context"
+	"os"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vgs "github.com/verygoodsecurity/vgs-api-client-go/clients"
-	"os"
 )
 
+// Provider will return the hashicorp terraform provider that we use to
+// provision vgs
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{

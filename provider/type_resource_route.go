@@ -33,7 +33,6 @@ func resourceRoute() *schema.Resource {
 		ReadContext:   readRoute,
 		UpdateContext: updateRoute,
 		DeleteContext: deleteRoute,
-
 		Schema: map[string]*schema.Schema{
 			"environment": {
 				Type:        schema.TypeString,
@@ -55,6 +54,9 @@ func resourceRoute() *schema.Resource {
 				Required:    true,
 				Description: "YAML route configuration https://www.verygoodsecurity.com/docs/features/yaml",
 			},
+		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }

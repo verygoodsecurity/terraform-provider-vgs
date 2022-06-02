@@ -17,8 +17,6 @@ var (
 )
 
 const (
-	orgId         = "ACrF5NY4vxzj8BvhU3q8btsN"
-	routeId       = "eccf1542-820b-4e7e-8b3f-03c4d8639f9d"
 	tenant        = "tntqlllutq4"
 	testTerraform = `
 resource "vgs_route" "inbound_route" {
