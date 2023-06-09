@@ -1,17 +1,26 @@
 package main
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
+	"context"
+	"log"
+
+	"github.com/hashicorp/terraform-plugin-framework/providerserver"
+
 	"github.com/verygoodsecurity/terraform-provider-vgs/provider"
 )
 
 //go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 //go:generate terraform fmt -recursive ./examples/
 func main() {
-	plugin.Serve(&plugin.ServeOpts{
-		ProviderFunc: func() *schema.Provider {
-			return provider.Provider()
+
+	if err := providerserver.Serve(
+		context.Background(),
+		provider.Provider,
+		providerserver.ServeOpts{
+			Address: "registry.terraform.io/<namespace>/<provider_name>",
 		},
-	})
+	); err != nil {
+		log.Fatal(err)
+	}
+
 }
