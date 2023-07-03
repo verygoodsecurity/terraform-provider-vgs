@@ -2,14 +2,19 @@ package provider
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
+	"gopkg.in/yaml.v3"
+	"reflect"
 	"regexp"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/pkg/errors"
+
+	"github.com/verygoodsecurity/terraform-provider-vgs/provider/internal"
 	vgs "github.com/verygoodsecurity/vgs-api-client-go/clients"
 	vgstools "github.com/verygoodsecurity/vgs-api-client-go/tools"
 )
@@ -33,6 +38,9 @@ func resourceRoute() *schema.Resource {
 		ReadContext:   readRoute,
 		UpdateContext: updateRoute,
 		DeleteContext: deleteRoute,
+		Importer: &schema.ResourceImporter{
+			StateContext: resourceRouteImport,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"environment": {
@@ -51,12 +59,37 @@ func resourceRoute() *schema.Resource {
 						Sprintf("Vault identifier must match %s", validVaultIdRegexRaw))),
 			},
 			"inline_config": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "YAML route configuration https://www.verygoodsecurity.com/docs/features/yaml",
+				Type:                  schema.TypeString,
+				Required:              true,
+				Description:           "YAML route configuration https://www.verygoodsecurity.com/docs/features/yaml",
+				DiffSuppressFunc:      suppressEquivalentRouteDiffs,
+				DiffSuppressOnRefresh: true,
 			},
 		},
 	}
+}
+
+func suppressEquivalentRouteDiffs(k string, oldValue string, newValue string, d *schema.ResourceData) bool {
+
+	var oldMap interface{}
+	if err := yaml.Unmarshal([]byte(oldValue), &oldMap); err != nil {
+		return false
+	}
+
+	var newMap interface{}
+	if err := yaml.Unmarshal([]byte(newValue), &newMap); err != nil {
+		return false
+	}
+
+	oldMap = internal.Convert(oldMap)
+	_ = internal.SafeDeleteKey(oldMap, "attributes.created_at")
+	_ = internal.SafeDeleteKey(oldMap, "attributes.updated_at")
+
+	newMap = internal.Convert(newMap)
+	_ = internal.SafeDeleteKey(newMap, "attributes.created_at")
+	_ = internal.SafeDeleteKey(newMap, "attributes.updated_at")
+
+	return reflect.DeepEqual(oldMap, newMap)
 }
 
 func readRoute(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -71,9 +104,19 @@ func readRoute(ctx context.Context, d *schema.ResourceData, m interface{}) diag.
 	if err != nil {
 		return diag.FromErr(errors.Wrap(err, "failed to extract route ID"))
 	}
-	_, err = c.Routes(cfg).GetRoute(vaultId, routeId)
 
-	// TODO set yaml?
+	routeJson, err := c.Routes(cfg).GetRoute(vaultId, routeId)
+	if err != nil {
+		return diag.FromErr(errors.Wrap(err, "failed to get route"))
+	}
+
+	routeYaml, err := jsonResponse2YamlRoute(routeJson)
+	if err != nil {
+		return diag.FromErr(errors.Wrap(err, "failed to parse response"))
+	}
+
+	d.SetId(routeId)
+	d.Set("inline_config", routeYaml)
 
 	return diag.FromErr(err)
 }
@@ -128,4 +171,25 @@ func config(d *schema.ResourceData) vgs.ClientConfig {
 			AddParameter("VGS_KEYCLOAK_REALM", "vgs").
 			AddParameter("VGS_ACCOUNT_MANAGEMENT_API_BASE_URL", "https://accounts.apps.verygoodsecurity.com").
 			AddParameter("VGS_VAULT_MANAGEMENT_API_BASE_URL", fmt.Sprintf("https://api.%s.verygoodsecurity.com", dataEnv)))
+}
+
+func resourceRouteImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	parts := strings.Split(d.Id(), ":")
+
+	d.Set("environment", parts[0])
+	d.Set("vault", parts[1])
+	d.Set("inline_config", fmt.Sprintf("id: %s", parts[2]))
+	d.SetId(parts[2])
+
+	return []*schema.ResourceData{d}, nil
+}
+
+func jsonResponse2YamlRoute(jsonStr string) (yamlStr string, err error) {
+	var body map[string]interface{}
+	if err := json.Unmarshal([]byte(jsonStr), &body); err != nil {
+		return "", errors.Wrap(err, "failed to unmarshal JSON")
+	}
+	unwrappedBody := body["data"].(map[string]interface{})
+	b, err := yaml.Marshal(unwrappedBody)
+	return string(b), errors.Wrap(err, "failed to marshal YAML")
 }
