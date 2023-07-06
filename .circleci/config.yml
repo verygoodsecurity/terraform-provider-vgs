@@ -25,7 +25,7 @@ jobs:
       - image: cimg/go:1.20.5
     steps:
       - checkout
-      - run: go install github.com/goreleaser/goreleaser@v1.1.0
+      - run: go install github.com/goreleaser/goreleaser@v1.19.1
       - run: goreleaser release --skip-sign 
 
 workflows:
