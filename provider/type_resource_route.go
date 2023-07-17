@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
 	"reflect"
@@ -41,6 +42,7 @@ func resourceRoute() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: resourceRouteImport,
 		},
+		CustomizeDiff: customdiff.ForceNewIfChange("inline_config", isIdUpdated),
 
 		Schema: map[string]*schema.Schema{
 			"environment": {
@@ -84,12 +86,21 @@ func suppressEquivalentRouteDiffs(k string, oldValue string, newValue string, d 
 	oldMap = internal.Convert(oldMap)
 	_ = internal.SafeDeleteKey(oldMap, "attributes.created_at")
 	_ = internal.SafeDeleteKey(oldMap, "attributes.updated_at")
+	_ = internal.SafeDeleteKey(oldMap, "attributes.id")
 
 	newMap = internal.Convert(newMap)
 	_ = internal.SafeDeleteKey(newMap, "attributes.created_at")
 	_ = internal.SafeDeleteKey(newMap, "attributes.updated_at")
+	_ = internal.SafeDeleteKey(newMap, "attributes.id")
 
 	return reflect.DeepEqual(oldMap, newMap)
+}
+
+func isIdUpdated(ctx context.Context, oldValue, newValue, meta interface{}) bool {
+	oldRouteId, _ := vgstools.RouteIdFromYaml(oldValue.(string))
+	newRouteId, _ := vgstools.RouteIdFromYaml(newValue.(string))
+
+	return oldRouteId != newRouteId
 }
 
 func readRoute(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
