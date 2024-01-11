@@ -5,7 +5,8 @@
 Custom Terraform provider that allows provisioning [VGS Proxy Routes](https://www.verygoodsecurity.com/docs/guides/managing-your-routes).
 
 ## Provider Status
- <span style="color:#d2382c">Deprecated Version:</span> We no longer provide support for this provider. We are not giving up on our terraform or our DevOps strategy. Look forward to future updates at our [blog](https://www.verygoodsecurity.com/blog/). 
+
+ <b style="background-color:#d2382c">Deprecation Notice:</b> We do not currently provide support for this provider. VGS is committed to providing developer tooling and recommends using the [VGS CLI and its related tools and patterns](https://www.verygoodsecurity.com/docs/vgs-cli/getting-started) for managing your vaults. Look forward to future updates at our [blog](https://www.verygoodsecurity.com/blog/). 
 
 
 ## How to Install
