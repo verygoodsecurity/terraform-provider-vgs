@@ -4,7 +4,12 @@
 
 Custom Terraform provider that allows provisioning [VGS Proxy Routes](https://www.verygoodsecurity.com/docs/guides/managing-your-routes).
 
-# How to Install
+## Provider Status
+
+ <b style="background-color:#d2382c">Deprecation Notice:</b> We do not currently provide support for this provider. VGS is committed to providing developer tooling and recommends using the [VGS CLI and its related tools and patterns](https://www.verygoodsecurity.com/docs/vgs-cli/getting-started) for managing your vaults. Look forward to future updates at our [blog](https://www.verygoodsecurity.com/blog/). 
+
+
+## How to Install
 Requirements: `terraform` ver **0.12 or later**
 ## Manual (in-house provider)
 1. Navigate to the [latest release](https://github.com/verygoodsecurity/terraform-provider-vgs/releases) of the provider.
@@ -21,8 +26,6 @@ For `terraform` 0.12:
 ~ mkdir -p ~/.terraform.d/plugins
 ~ cp ./bin/terraform-provider-vgs_{ver} ~/.terraform.d/plugins/terraform-provider-vgs_{ver}
 ```
-## Terraform Registry
-NOTE: The current version of the provider has not been published to [Terraform Registry](https://registry.terraform.io/) yet.
 
 # How to Use
 1. Create a Vault through VGS dashboard and get your Vault ID.
